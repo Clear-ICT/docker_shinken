@@ -109,6 +109,10 @@ RUN         ln -sf /etc/apache2/mods-available/proxy* /etc/apache2/mods-enabled/
 RUN         ln -sf /etc/apache2/mods-available/xml2enc* /etc/apache2/mods-enabled/
 RUN         ln -sf /etc/apache2/mods-available/slotmem_shm* /etc/apache2/mods-enabled/
 
+# Install fping (needed by check_fping nagios plugin)
+RUN         apt-get install fping && \
+                chmod 4755 /usr/bin/fping
+
 # Configure Shinken modules
 RUN         mkdir -p /etc/shinken/custom_configs /usr/local/custom_plugins && \
                 ln -sf /etc/shinken/custom_configs/htpasswd.users /etc/shinken/htpasswd.users && \
