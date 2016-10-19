@@ -110,8 +110,7 @@ RUN         ln -sf /etc/apache2/mods-available/xml2enc* /etc/apache2/mods-enable
 RUN         ln -sf /etc/apache2/mods-available/slotmem_shm* /etc/apache2/mods-enabled/
 
 # Install fping (needed by check_fping nagios plugin)
-RUN         apt-get install fping && \
-                chmod 4755 /usr/bin/fping
+RUN         apt-get install fping
 
 # Configure Shinken modules
 RUN         mkdir -p /etc/shinken/custom_configs /usr/local/custom_plugins && \
@@ -150,6 +149,9 @@ ADD         extra_plugins/* /usr/lib/nagios/plugins/
 RUN         cd /usr/lib/nagios/plugins/ && \
                 chmod a+x * && \
                 chmod u+s check_apt restart_service check_ping check_icmp check_fping apt_update
+
+# Additional shinken configuration
+RUN         rm /etc/shinken/hosts/localhost.cfg
 
 # configure supervisor
 ADD         supervisor/conf.d/* /etc/supervisor/conf.d/
