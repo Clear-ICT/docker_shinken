@@ -132,10 +132,6 @@ COPY        graphite/carbon.conf /etc/carbon/
 COPY        graphite/storage-schemas.conf /etc/carbon/
 COPY        graphite/storage-aggregation.conf /etc/carbon/
 COPY        graphite/local_settings.py /etc/graphite/
-RUN         mkdir -p /var/lib/graphite/storage
-RUN         graphite-manage syncdb --noinput
-RUN         graphite-manage createsuperuser --username=admin --email=root@localhost --noinput
-RUN         chown -R _graphite:_graphite /var/lib/graphite/storage
 RUN         cp /usr/share/graphite-web/apache2-graphite.conf /etc/apache2/sites-available && \
                 a2dissite 000-default && \
                 a2ensite apache2-graphite
@@ -161,4 +157,5 @@ EXPOSE  80
 EXPOSE  7767
 
 # Default docker process
-CMD ["supervisord", "-c", "/etc/supervisor/supervisord.conf", "-n"]
+COPY        bin/entrypoint.sh /
+CMD ["/entrypoint.sh"]
