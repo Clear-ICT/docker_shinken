@@ -1,0 +1,77 @@
+diff -ruN etc_shinken.orig/shinken/packs/linux-snmp/services/cpu.cfg etc_shinken/shinken/packs/linux-snmp/services/cpu.cfg
+--- etc_shinken.orig/shinken/packs/linux-snmp/services/cpu.cfg	2014-06-27 16:27:43.000000000 +0300
++++ etc_shinken/shinken/packs/linux-snmp/services/cpu.cfg	2016-10-19 14:53:34.805490274 +0300
+@@ -1,6 +1,6 @@
+ define service {
+     service_description   Cpu
+-    use                   20min_long,linux-service
++    use                   5min_long,linux-service
+     register              0
+     host_name             linux-snmp
+     check_command         check_linux_cpu
+diff -ruN etc_shinken.orig/shinken/packs/linux-snmp/services/disks.cfg etc_shinken/shinken/packs/linux-snmp/services/disks.cfg
+--- etc_shinken.orig/shinken/packs/linux-snmp/services/disks.cfg	2014-06-27 16:27:43.000000000 +0300
++++ etc_shinken/shinken/packs/linux-snmp/services/disks.cfg	2016-10-19 14:53:56.305338230 +0300
+@@ -1,6 +1,6 @@
+ define service {
+     service_description   Disks
+-    use                   1hour_long,linux-service
++    use                   5min_long,linux-service
+     register              0
+     host_name             linux-snmp
+     check_command         check_linux_disks
+diff -ruN etc_shinken.orig/shinken/packs/linux-snmp/services/load.cfg etc_shinken/shinken/packs/linux-snmp/services/load.cfg
+--- etc_shinken.orig/shinken/packs/linux-snmp/services/load.cfg	2014-06-27 16:27:43.000000000 +0300
++++ etc_shinken/shinken/packs/linux-snmp/services/load.cfg	2016-10-19 14:54:18.229183135 +0300
+@@ -1,6 +1,6 @@
+ define service {
+     service_description   Load
+-    use                   20min_long,linux-service
++    use                   5min_long,linux-service
+     register              0
+     host_name             linux-snmp
+     check_command         check_linux_load
+diff -ruN etc_shinken.orig/shinken/packs/linux-snmp/services/logFiles.cfg etc_shinken/shinken/packs/linux-snmp/services/logFiles.cfg
+--- etc_shinken.orig/shinken/packs/linux-snmp/services/logFiles.cfg	2014-06-27 16:27:43.000000000 +0300
++++ etc_shinken/shinken/packs/linux-snmp/services/logFiles.cfg	2016-10-19 14:52:37.717893731 +0300
+@@ -1,6 +1,6 @@
+ define service {
+     service_description   Log_File_Health
+-    use                   10min_short,linux-service
++    use                   5min_medium,linux-service
+     register              0
+     host_name             linux-snmp
+     check_command         check_linux_logfiles
+diff -ruN etc_shinken.orig/shinken/packs/linux-snmp/services/memory.cfg etc_shinken/shinken/packs/linux-snmp/services/memory.cfg
+--- etc_shinken.orig/shinken/packs/linux-snmp/services/memory.cfg	2014-06-27 16:27:43.000000000 +0300
++++ etc_shinken/shinken/packs/linux-snmp/services/memory.cfg	2016-10-19 14:54:36.565053377 +0300
+@@ -1,6 +1,6 @@
+ define service {
+     service_description   Memory
+-    use                   20min_medium,linux-service
++    use                   5min_medium,linux-service
+     register              0
+     host_name             linux-snmp
+     check_command         check_linux_memory
+diff -ruN etc_shinken.orig/shinken/packs/linux-snmp/services/network_usage.cfg etc_shinken/shinken/packs/linux-snmp/services/network_usage.cfg
+--- etc_shinken.orig/shinken/packs/linux-snmp/services/network_usage.cfg	2014-06-27 16:27:43.000000000 +0300
++++ etc_shinken/shinken/packs/linux-snmp/services/network_usage.cfg	2016-10-19 14:53:14.945630673 +0300
+@@ -1,6 +1,6 @@
+ define service {
+     service_description   NetworkUsage
+-    use                   10min_long,linux-service
++    use                   5min_medium,linux-service
+     register              0
+     host_name             linux-snmp
+     check_command         check_linux_network_usage
+diff -ruN etc_shinken.orig/shinken/packs/linux-snmp/services/time.cfg etc_shinken/shinken/packs/linux-snmp/services/time.cfg
+--- etc_shinken.orig/shinken/packs/linux-snmp/services/time.cfg	2014-06-27 16:27:43.000000000 +0300
++++ etc_shinken/shinken/packs/linux-snmp/services/time.cfg	2016-10-19 14:55:11.608805282 +0300
+@@ -1,6 +1,6 @@
+ define service {
+     service_description   TimeSync
+-    use                   12hours_short,linux-service
++    use                   5min_long,linux-service
+     register              0
+     host_name             linux-snmp
+     check_command         check_linux_time
