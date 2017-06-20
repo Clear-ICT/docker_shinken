@@ -29,29 +29,8 @@ RUN         apt-get -o Acquire::ForceIPv4=true update && apt-get -o Acquire::For
                 git           \
                 mongodb
 
-# Download and install shinken manually
-# For some reason it doesn't install properly with pip
-RUN         useradd --create-home shinken && \
-                cd /tmp && \
-                wget https://github.com/naparuba/shinken/archive/2.4.3.tar.gz && \
-                tar -xf 2.4.3.tar.gz && \
-                cd shinken-2.4.3 && \
-                python setup.py install && \
-                cd /tmp && \
-                rm -rf 2.4.3.tar.gz shinken-2.4.3 && \
-                update-rc.d -f apache2 remove && \
-                update-rc.d -f shinken remove
-
-# Install shinken modules from shinken.io
-RUN         chown -R shinken:shinken /etc/shinken/ && \
-                su - shinken -c 'shinken --init' && \
-                su - shinken -c 'shinken install webui2' && \
-                su - shinken -c 'shinken install auth-htpasswd' && \
-                su - shinken -c 'shinken install logstore-sqlite' && \
-                su - shinken -c 'shinken install booster-nrpe' && \
-                su - shinken -c 'shinken install livestatus' && \
-                su - shinken -c 'shinken install graphite2' && \
-                su - shinken -c 'shinken install ui-graphite2'
+# Install fping (needed by check_fping nagios plugin)
+RUN         apt-get install fping
 
 # Install Syleam plugins
 RUN         apt-get -o Acquire::ForceIPv4=true install -y monitoring-plugins-sfl-check-arp-no-change \
@@ -77,8 +56,41 @@ RUN         cd /usr/src && git clone https://github.com/Clear-ICT/shinken-plugin
                 cd /usr/src && \
                 rm -rf shinken-plugins
 
+# Download and install shinken manually
+# For some reason it doesn't install properly with pip
+RUN         useradd --create-home shinken && \
+                cd /tmp && \
+                wget https://github.com/naparuba/shinken/archive/2.4.3.tar.gz && \
+                tar -xf 2.4.3.tar.gz && \
+                cd shinken-2.4.3 && \
+                python setup.py install && \
+                cd /tmp && \
+                rm -rf 2.4.3.tar.gz shinken-2.4.3 && \
+                update-rc.d -f apache2 remove && \
+                update-rc.d -f shinken remove
+
 # Install Graphite
 RUN         DEBIAN_FRONTEND=noninteractive apt-get --assume-yes install graphite-web graphite-carbon
+
+# Needed for webui2
+RUN         pip install pymongo>=3.0.3 requests arrow bottle==0.12.8 passlib
+COPY        etc/mongodb.conf /etc/
+
+# Install shinken modules from shinken.io
+RUN         chown -R shinken:shinken /etc/shinken/ && \
+                su - shinken -c 'shinken --init' && \
+                su - shinken -c 'shinken install webui2' && \
+                su - shinken -c 'shinken install auth-htpasswd' && \
+                su - shinken -c 'shinken install logstore-sqlite' && \
+                su - shinken -c 'shinken install booster-nrpe' && \
+                su - shinken -c 'shinken install livestatus' && \
+                su - shinken -c 'shinken install graphite2' && \
+                su - shinken -c 'shinken install ui-graphite2' && \
+                su - shinken -c 'shinken install linux-snmp' && \
+                su - shinken -c 'shinken install postgresql' && \
+                su - shinken -c 'shinken install windows' && \
+                su - shinken -c 'shinken install dc' && \
+                su - shinken -c 'shinken install ssh'
 
 # Install and configure thruk
 RUN         gpg --keyserver keys.gnupg.net --recv-keys F8C1CA08A57B9ED7 && \
@@ -99,18 +111,11 @@ RUN         cd /usr/src/nrpe-2.15/ && \
                 cd / && \
                 rm -rf /usr/src/nrpe-2.15
 
-# Needed for webui2
-RUN         pip install pymongo>=3.0.3 requests arrow bottle==0.12.8 passlib
-COPY        etc/mongodb.conf /etc/
-
 # Configure apache
 ADD         shinken/shinken_apache.conf /etc/apache2/conf.d/shinken_apache.conf
 RUN         ln -sf /etc/apache2/mods-available/proxy* /etc/apache2/mods-enabled/
 RUN         ln -sf /etc/apache2/mods-available/xml2enc* /etc/apache2/mods-enabled/
 RUN         ln -sf /etc/apache2/mods-available/slotmem_shm* /etc/apache2/mods-enabled/
-
-# Install fping (needed by check_fping nagios plugin)
-RUN         apt-get install fping
 
 # Configure Shinken modules
 RUN         mkdir -p /etc/shinken/custom_configs /usr/local/custom_plugins && \
@@ -125,6 +130,9 @@ COPY         shinken/webui2.cfg /etc/shinken/modules/
 COPY         shinken/livestatus.cfg /etc/shinken/modules/
 COPY         shinken/graphite2.cfg /etc/shinken/modules/
 COPY         shinken/ui-graphite2.cfg /etc/shinken/modules/
+COPY         shinken/snmp-patch.txt /tmp/
+RUN          cd /etc/shinken && patch -p2 < /tmp/snmp-patch.txt && \
+                 rm /tmp/snmp-patch.txt
 RUN          chown -R shinken:shinken /etc/shinken/
 
 # Configure graphite
