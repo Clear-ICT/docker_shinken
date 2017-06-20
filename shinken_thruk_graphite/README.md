@@ -1,19 +1,19 @@
 Shinken Thruk Graphite
 ======================
 
-[![Docker Pulls](https://img.shields.io/docker/pulls/rohit01/shinken_thruk_graphite.svg)](https://hub.docker.com/r/rohit01/shinken_thruk_graphite/) [![Docker Stars](https://img.shields.io/docker/stars/rohit01/shinken_thruk_graphite.svg)](https://hub.docker.com/r/rohit01/shinken_thruk_graphite/) [![](https://badge.imagelayers.io/rohit01/shinken_thruk_graphite:latest.svg)](https://imagelayers.io/?images=rohit01/shinken_thruk_graphite:latest)
+[![Docker Pulls](https://img.shields.io/docker/pulls/clearict/shinken_thruk_graphite.svg)](https://hub.docker.com/r/clearict/shinken_thruk_graphite/) [![Docker Stars](https://img.shields.io/docker/stars/clearict/shinken_thruk_graphite.svg)](https://hub.docker.com/r/clearict/shinken_thruk_graphite/) [![](https://badge.imagelayers.io/clearict/shinken_thruk_graphite:latest.svg)](https://imagelayers.io/?images=clearict/shinken_thruk_graphite:latest)
 
 It contains shinken, thruk and graphite installation along with few must have shinken modules like WebUI (Web Interface), standard nrpe plugins + few extra ones, nrpe-booster support and a web server (apache2).
 
 How to run:
 
-    $ git clone https://github.com/rohit01/docker_shinken.git
+    $ git clone https://github.com/clearict/docker_shinken.git
     $ cd docker_shinken/shinken_thruk_graphite
-    $ sudo docker run -d -v "$(pwd)/custom_configs:/etc/shinken/custom_configs" -p 80:80 rohit01/shinken_thruk_graphite
+    $ sudo docker run -d -v "$(pwd)/custom_configs:/etc/shinken/custom_configs" -p 80:80 -p7677 clearict/shinken_thruk_graphite
 
 Once done, visit these urls (Default credentials - admin/admin):
 
-* Default WebUI: <http://localhost/>
+* Default WebUI: <http://localhost:7677/>
 * Thruk Web Interface: <http://localhost/thruk/>
 * Graphs for perf data are available in WebUI. Sample link: <http://localhost/service/docker_shinken/http_port_7770#graphs>
 
@@ -24,7 +24,7 @@ Note:
 * The nrpe plugins installation directory is /usr/lib/nagios/plugins.
 * If you are using custom NRPE plugins, please mount your plugins directory inside docker container at /usr/local/custom_plugins. You need to define resource paths accordingly.
 
-Docker registry link: <https://registry.hub.docker.com/u/rohit01/shinken_thruk_graphite/>
+Docker registry link: <https://registry.hub.docker.com/u/clearict/shinken_thruk_graphite/>
 
 
 Alternative Installation:
