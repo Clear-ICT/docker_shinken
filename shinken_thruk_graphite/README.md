@@ -9,7 +9,7 @@ How to run:
 
     $ git clone https://github.com/clearict/docker_shinken.git
     $ cd docker_shinken/shinken_thruk_graphite
-    $ sudo docker run -d -v "$(pwd)/custom_configs:/etc/shinken/custom_configs" -p 80:80 -p7677 clearict/shinken_thruk_graphite
+    $ sudo docker run -d -v "$(pwd)/custom_configs:/etc/shinken/custom_configs" -v graphite_storage:/var/lib/graphite/storage/whisper -v mongodb_storage:/var/lib/mongodb -p 80:80 -p 7767:7767 clearict/shinken_thruk_graphite
 
 Once done, visit these urls (Default credentials - admin/admin):
 
