@@ -90,6 +90,18 @@ RUN         chown -R shinken:shinken /etc/shinken/ && \
                 su - shinken -c 'shinken install postgresql' && \
                 su - shinken -c 'shinken install windows' && \
                 su - shinken -c 'shinken install dc' && \
+                su - shinken -c 'shinken install vmware' && \
+                su - shinken -c 'shinken install hp-printers' && \
+                su - shinken -c 'shinken install printers' && \
+                su - shinken -c 'shinken install http' && \
+                su - shinken -c 'shinken install dns' && \
+                su - shinken -c 'shinken install pop3' && \
+                su - shinken -c 'shinken install imap' && \
+                su - shinken -c 'shinken install smtp' && \
+                su - shinken -c 'shinken install dhcp' && \
+                su - shinken -c 'shinken install cisco' && \
+                su - shinken -c 'shinken install router' && \
+                su - shinken -c 'shinken install switch' && \
                 su - shinken -c 'shinken install ssh'
 
 # Install and configure thruk
@@ -131,8 +143,11 @@ COPY         shinken/livestatus.cfg /etc/shinken/modules/
 COPY         shinken/graphite2.cfg /etc/shinken/modules/
 COPY         shinken/ui-graphite2.cfg /etc/shinken/modules/
 COPY         shinken/snmp-patch.txt /tmp/
+COPY         shinken/shinken-libexec-patch.txt /tmp/
 RUN          cd /etc/shinken && patch -p2 < /tmp/snmp-patch.txt && \
                  rm /tmp/snmp-patch.txt
+RUN          cd /var/lib/shinken && patch -p4 < /tmp/shinken-libexec-patch.txt && \
+                 rm /tmp/shinken-libexec-patch.txt
 RUN          chown -R shinken:shinken /etc/shinken/
 
 # Configure graphite
@@ -153,9 +168,18 @@ ADD         extra_plugins/* /usr/lib/nagios/plugins/
 RUN         cd /usr/lib/nagios/plugins/ && \
                 chmod a+x * && \
                 chmod u+s check_apt restart_service check_ping check_icmp check_fping apt_update
+RUN         ln -s /usr/lib/nagios/plugins/check_netint.pl /var/lib/shinken/libexec/
 
 # Additional shinken configuration
 RUN         rm /etc/shinken/hosts/localhost.cfg
+
+# Shutup shinken/nagios plugin log file warnings
+RUN         mkdir -p /var/log/rhosts && \
+                touch /var/log/rhosts/remote-hosts.log
+
+# Remove file causing thruk (apache2) to not ask for user/password and
+# showing a messages that says "Your are not authorized"...
+RUN         unlink /etc/apache2/conf-enabled/thruk_cookie_auth_vhost.conf
 
 # configure supervisor
 ADD         supervisor/conf.d/* /etc/supervisor/conf.d/

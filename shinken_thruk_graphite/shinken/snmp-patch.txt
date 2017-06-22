@@ -75,3 +75,14 @@ diff -ruN etc_shinken.orig/shinken/packs/linux-snmp/services/time.cfg etc_shinke
      register              0
      host_name             linux-snmp
      check_command         check_linux_time
+--- etc_shinken.orig/shinken/packs/linux-snmp/templates.cfg	2016-10-08 10:45:30.971699436 +0300
++++ etc_shinken/shinken/packs/linux-snmp/templates.cfg	2017-06-21 16:36:12.232433713 +0300
+@@ -21,7 +21,7 @@
+     _MEMORY_CRIT        95
+     _NTP_WARN           0.128
+     _NTP_CRIT           1
+-    _NET_IFACES         wlan\d+|eth\d+|em\d+
++    _NET_IFACES         wlan\d+|eth\d+|em\d+|enp0s\d+|ens\d+
+     _NET_WARN           90,90,0,0,0,0
+     _NET_CRIT           0,0,0,0,0,0
+ 
